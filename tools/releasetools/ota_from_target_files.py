@@ -124,6 +124,10 @@ Usage:  ota_from_target_files [flags] input_target_files output_ota_package
 
   --payload_signer_args <args>
       Specify the arguments needed for payload signer.
+
+  --backup <boolean>
+      Enable or disable the execution of backuptool.sh.
+      Disabled by default.
 """
 
 import sys
@@ -174,6 +178,7 @@ OPTIONS.gen_verify = False
 OPTIONS.log_diff = None
 OPTIONS.payload_signer = None
 OPTIONS.payload_signer_args = []
+OPTIONS.backuptool = False
 
 def MostPopularKey(d, default):
   """Given a dict, return the key corresponding to the largest
@@ -668,6 +673,9 @@ else if get_stage("%(bcb_dev)s") == "3/3" then
 
   device_specific.FullOTA_InstallBegin()
 
+  if OPTIONS.backuptool:
+    script.RunBackup("backup")
+
   system_progress = 0.75
 
   if OPTIONS.wipe_user_data:
@@ -743,6 +751,10 @@ else if get_stage("%(bcb_dev)s") == "3/3" then
 
   script.ShowProgress(0.05, 5)
   script.WriteRawImage("/boot", "boot.img")
+
+  if OPTIONS.backuptool:
+    script.ShowProgress(0.02, 10)
+    script.RunBackup("restore")
 
   script.ShowProgress(0.2, 10)
   device_specific.FullOTA_InstallEnd()
@@ -2000,6 +2012,8 @@ def main(argv):
       OPTIONS.updater_binary = a
     elif o in ("--no_fallback_to_full",):
       OPTIONS.fallback_to_full = False
+    elif o in ("--backup"):
+      OPTIONS.backuptool = bool(a.lower() == 'true')
     elif o == "--stash_threshold":
       try:
         OPTIONS.stash_threshold = float(a)
@@ -2040,6 +2054,7 @@ def main(argv):
                                  "oem_no_mount",
                                  "verify",
                                  "no_fallback_to_full",
+                                 "backup=",
                                  "stash_threshold=",
                                  "gen_verify",
                                  "log_diff=",
