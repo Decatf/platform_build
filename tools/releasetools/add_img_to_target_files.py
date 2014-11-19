@@ -237,10 +237,10 @@ def AddImagesToTargetFiles(filename):
   if has_vendor:
     banner("vendor")
     AddVendor(output_zip)
-  banner("userdata")
-  AddUserdata(output_zip)
-  banner("cache")
-  AddCache(output_zip)
+#  banner("userdata")
+#  AddUserdata(output_zip)
+#  banner("cache")
+#  AddCache(output_zip)
 
   output_zip.close()
 
