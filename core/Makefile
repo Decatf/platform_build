@@ -791,8 +791,37 @@ $(TARGET_RECOVERY_ROOT_TIMESTAMP): $(INTERNAL_RECOVERY_FILES) \
 	@echo -e ${CL_YLW}"Modifying default.prop"${CL_RST}
 	$(SED_INPLACE) 's/ro.build.date.utc=.*/ro.build.date.utc=0/g' $(TARGET_RECOVERY_ROOT_OUT)/default.prop
 	$(SED_INPLACE) 's/ro.adb.secure=1//g' $(TARGET_RECOVERY_ROOT_OUT)/default.prop
+
+	$(hide) rm -rf $(PRODUCT_OUT)/extra
+	$(hide) mkdir -p $(PRODUCT_OUT)/extra/sbin
+	$(hide) mv $(TARGET_RECOVERY_ROOT_OUT)/sbin/adbd $(PRODUCT_OUT)/extra/sbin/adbd
+	$(hide) mv $(TARGET_RECOVERY_ROOT_OUT)/sbin/dosfsck $(PRODUCT_OUT)/extra/sbin/dosfsck
+	$(hide) mv $(TARGET_RECOVERY_ROOT_OUT)/sbin/e2fsck $(PRODUCT_OUT)/extra/sbin/e2fsck
+	$(hide) mv $(TARGET_RECOVERY_ROOT_OUT)/sbin/healthd $(PRODUCT_OUT)/extra/sbin/healthd
+	$(hide) mv $(TARGET_RECOVERY_ROOT_OUT)/sbin/mkdosfs $(PRODUCT_OUT)/extra/sbin/mkdosfs
+	$(hide) mv $(TARGET_RECOVERY_ROOT_OUT)/sbin/mount.exfat $(PRODUCT_OUT)/extra/sbin/mount.exfat
+	$(hide) mv $(TARGET_RECOVERY_ROOT_OUT)/sbin/mke2fs $(PRODUCT_OUT)/extra/sbin/mke2fs
+	$(hide) mv $(TARGET_RECOVERY_ROOT_OUT)/sbin/pigz $(PRODUCT_OUT)/extra/sbin/pigz
+	$(hide) mv $(TARGET_RECOVERY_ROOT_OUT)/sbin/tune2fs $(PRODUCT_OUT)/extra/sbin/tune2fs
+	$(hide) mv $(TARGET_RECOVERY_ROOT_OUT)/sbin/recovery $(PRODUCT_OUT)/extra/sbin/recovery
+
+	$(hide) ln -sf /extra/sbin/adbd -t $(TARGET_RECOVERY_ROOT_OUT)/sbin/
+	$(hide) ln -sf /extra/sbin/dosfsck -t $(TARGET_RECOVERY_ROOT_OUT)/sbin/
+	$(hide) ln -sf /extra/sbin/e2fsck -t $(TARGET_RECOVERY_ROOT_OUT)/sbin/
+	$(hide) ln -sf /extra/sbin/healthd -t $(TARGET_RECOVERY_ROOT_OUT)/sbin/
+	$(hide) ln -sf /extra/sbin/mkdosfs -t $(TARGET_RECOVERY_ROOT_OUT)/sbin/
+	$(hide) ln -sf /extra/sbin/mount.exfat -t $(TARGET_RECOVERY_ROOT_OUT)/sbin/
+	$(hide) ln -sf /extra/sbin/mke2fs -t $(TARGET_RECOVERY_ROOT_OUT)/sbin/
+	$(hide) ln -sf /extra/sbin/pigz -t $(TARGET_RECOVERY_ROOT_OUT)/sbin/
+	$(hide) ln -sf /extra/sbin/tune2fs -t $(TARGET_RECOVERY_ROOT_OUT)/sbin/
+	$(hide) ln -sf /extra/sbin/recovery -t $(TARGET_RECOVERY_ROOT_OUT)/sbin/
+
+	$(hide) mv $(TARGET_RECOVERY_ROOT_OUT)/res $(PRODUCT_OUT)/extra/
+	$(hide) ln -sf /extra/res -t $(TARGET_RECOVERY_ROOT_OUT)
+
 	@echo -e ${CL_CYN}"----- Made recovery filesystem --------"$(TARGET_RECOVERY_ROOT_OUT)${CL_RST}
 	@touch $(TARGET_RECOVERY_ROOT_TIMESTAMP)
+
 
 $(recovery_uncompressed_ramdisk): $(MINIGZIP) \
 	$(TARGET_RECOVERY_ROOT_TIMESTAMP)
