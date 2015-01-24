@@ -1451,6 +1451,8 @@ ifneq ($(recovery_fstab),)
 
 # -----------------------------------------------------------------
 # OTA update package
+#
+# DoPa (20140604) - added 'OTA_EXTRA_OPTIONS' here and in BoardConfig.mk
 
 name := $(TARGET_PRODUCT)
 ifeq ($(TARGET_BUILD_TYPE),debug)
@@ -1475,6 +1477,7 @@ $(INTERNAL_OTA_PACKAGE_TARGET): $(BUILT_TARGET_FILES_PACKAGE) $(DISTTOOLS)
 	   -p $(HOST_OUT) \
 	   -k $(KEY_CERT_PAIR) \
 	   --backup=$(backuptool) \
+	   $(OTA_EXTRA_OPTIONS) \
 	   $(if $(OEM_OTA_CONFIG), -o $(OEM_OTA_CONFIG)) \
 	   $(BUILT_TARGET_FILES_PACKAGE) $@
 
