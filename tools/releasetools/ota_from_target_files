@@ -507,7 +507,8 @@ def WriteFullOTAPackage(input_zip, output_zip):
 #  has_recovery_patch = HasRecoveryPatch(input_zip)
   has_recovery_patch = False
 #  block_based = OPTIONS.block_based and has_recovery_patch
-  block_based = False
+#  block_based = False
+  block_based = OPTIONS.block_based
 
 #  if not OPTIONS.omit_prereq:
 #    ts = GetBuildProp("ro.build.date.utc", OPTIONS.info_dict)
@@ -560,10 +561,10 @@ else if get_stage("%(bcb_dev)s") == "3/3" then
   script.AppendExtra("ifelse(is_mounted(\"/system\"), unmount(\"/system\"));")
   device_specific.FullOTA_InstallBegin()
 
-  if OPTIONS.backuptool:
-    script.Mount("/system", recovery_mount_options)
-    script.RunBackup("backup")
-    script.Unmount("/system")
+  #if OPTIONS.backuptool:
+    #script.Mount("/system", recovery_mount_options)
+    #script.RunBackup("backup")
+    #script.Unmount("/system")
 
   system_progress = 0.75
 
@@ -606,8 +607,8 @@ else if get_stage("%(bcb_dev)s") == "3/3" then
       common.ZipWriteStr(output_zip, "recovery/" + fn, data)
       system_items.Get("system/" + fn, dir=False)
 
-#    common.MakeRecoveryPatch(OPTIONS.input_tmp, output_sink,
-#                             recovery_img, boot_img)
+    common.MakeRecoveryPatch(OPTIONS.input_tmp, output_sink,
+                             recovery_img, boot_img)
 
     system_items.GetMetadata(input_zip)
     system_items.Get("system").SetPermissions(script)
@@ -635,10 +636,10 @@ else if get_stage("%(bcb_dev)s") == "3/3" then
   common.CheckSize(boot_img.data, "boot.img", OPTIONS.info_dict)
   common.ZipWriteStr(output_zip, "boot.img", boot_img.data)
 
-  if OPTIONS.backuptool:
-    script.ShowProgress(0.02, 10)
-    script.RunBackup("restore")
-    script.Unmount("/system")
+  #if OPTIONS.backuptool:
+    #script.ShowProgress(0.02, 10)
+    #script.RunBackup("restore")
+    #script.Unmount("/system")
 
   script.ShowProgress(0.05, 5)
   script.WriteRawImage("/boot", "boot.img")
@@ -1298,8 +1299,8 @@ else
         common.ZipWriteStr(output_zip, "recovery/" + fn, data)
         system_items.Get("system/" + fn, dir=False)
 
-#      common.MakeRecoveryPatch(OPTIONS.target_tmp, output_sink,
-#                               target_recovery, target_boot)
+      common.MakeRecoveryPatch(OPTIONS.target_tmp, output_sink,
+                               target_recovery, target_boot)
       script.DeleteFiles(["/system/recovery-from-boot.p",
                           "/system/etc/install-recovery.sh"])
     print "recovery image changed; including as patch from boot."
