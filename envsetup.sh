@@ -1649,11 +1649,11 @@ function fixup_common_out_dir() {
     if [ ! -z $ANDROID_FIXUP_COMMON_OUT ]; then
         if [ -d ${common_out_dir} ] && [ ! -L ${common_out_dir} ]; then
             mv ${common_out_dir} ${common_out_dir}-${target_device}
-            ln -s ${common_out_dir}-${target_device} ${common_out_dir}
+            ln -s -r ${common_out_dir}-${target_device} ${common_out_dir}
         else
             [ -L ${common_out_dir} ] && rm ${common_out_dir}
             mkdir -p ${common_out_dir}-${target_device}
-            ln -s ${common_out_dir}-${target_device} ${common_out_dir}
+            ln -s -r ${common_out_dir}-${target_device} ${common_out_dir}
         fi
     else
         [ -L ${common_out_dir} ] && rm ${common_out_dir}
