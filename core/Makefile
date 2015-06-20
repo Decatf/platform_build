@@ -899,11 +899,66 @@ $(RECOVERY_INSTALL_OTA_KEYS): $(OTA_PUBLIC_KEYS) $(DUMPKEY_JAR) $(extra_keys)
 
 TARGET_RECOVERY_ROOT_TIMESTAMP := $(TARGET_RECOVERY_OUT)/root.ts
 
-$(TARGET_RECOVERY_ROOT_TIMESTAMP): $(INTERNAL_RECOVERY_FILES) \
+define split-recovery-fs
+	$(hide) -rm -rf $(PRODUCT_OUT)/extra
+	$(hide) mkdir -p $(PRODUCT_OUT)/extra/sbin
+	$(hide) mv $(TARGET_RECOVERY_ROOT_OUT)/sbin/adbd $(PRODUCT_OUT)/extra/sbin/adbd
+	$(hide) mv $(TARGET_RECOVERY_ROOT_OUT)/sbin/dosfsck $(PRODUCT_OUT)/extra/sbin/dosfsck
+	$(hide) mv $(TARGET_RECOVERY_ROOT_OUT)/sbin/e2fsck $(PRODUCT_OUT)/extra/sbin/e2fsck
+	$(hide) mv $(TARGET_RECOVERY_ROOT_OUT)/sbin/healthd $(PRODUCT_OUT)/extra/sbin/healthd
+	$(hide) mv $(TARGET_RECOVERY_ROOT_OUT)/sbin/mkdosfs $(PRODUCT_OUT)/extra/sbin/mkdosfs
+	$(hide) mv $(TARGET_RECOVERY_ROOT_OUT)/sbin/mke2fs $(PRODUCT_OUT)/extra/sbin/mke2fs
+	$(hide) mv $(TARGET_RECOVERY_ROOT_OUT)/sbin/pigz $(PRODUCT_OUT)/extra/sbin/pigz
+	$(hide) mv $(TARGET_RECOVERY_ROOT_OUT)/sbin/tune2fs $(PRODUCT_OUT)/extra/sbin/tune2fs
+	$(hide) mv $(TARGET_RECOVERY_ROOT_OUT)/sbin/recovery $(PRODUCT_OUT)/extra/sbin/recovery
+	$(hide) mv $(TARGET_RECOVERY_ROOT_OUT)/sbin/mkfs.f2fs $(PRODUCT_OUT)/extra/sbin/mkfs.f2fs
+	$(hide) mv $(TARGET_RECOVERY_ROOT_OUT)/sbin/busybox $(PRODUCT_OUT)/extra/sbin/busybox
+	$(hide) mv $(TARGET_RECOVERY_ROOT_OUT)/sbin/linker $(PRODUCT_OUT)/extra/sbin/linker
+	$(hide) mv $(TARGET_RECOVERY_ROOT_OUT)/sbin/fsck.f2fs $(PRODUCT_OUT)/extra/sbin/fsck.f2fs
+
+	$(hide) ln -sf /extra/sbin/adbd -t $(TARGET_RECOVERY_ROOT_OUT)/sbin/
+	$(hide) ln -sf /extra/sbin/dosfsck -t $(TARGET_RECOVERY_ROOT_OUT)/sbin/
+	$(hide) ln -sf /extra/sbin/e2fsck -t $(TARGET_RECOVERY_ROOT_OUT)/sbin/
+	$(hide) ln -sf /extra/sbin/healthd -t $(TARGET_RECOVERY_ROOT_OUT)/sbin/
+	$(hide) ln -sf /extra/sbin/mkdosfs -t $(TARGET_RECOVERY_ROOT_OUT)/sbin/
+	$(hide) ln -sf /extra/sbin/mke2fs -t $(TARGET_RECOVERY_ROOT_OUT)/sbin/
+	$(hide) ln -sf /extra/sbin/pigz -t $(TARGET_RECOVERY_ROOT_OUT)/sbin/
+	$(hide) ln -sf /extra/sbin/tune2fs -t $(TARGET_RECOVERY_ROOT_OUT)/sbin/
+	$(hide) ln -sf /extra/sbin/recovery -t $(TARGET_RECOVERY_ROOT_OUT)/sbin/
+	$(hide) ln -sf /extra/sbin/mkfs.f2fs -t $(TARGET_RECOVERY_ROOT_OUT)/sbin/
+	$(hide) ln -sf /extra/sbin/busybox -t $(TARGET_RECOVERY_ROOT_OUT)/sbin/
+	$(hide) ln -sf /extra/sbin/linker -t $(TARGET_RECOVERY_ROOT_OUT)/sbin/
+	$(hide) ln -sf /extra/sbin/fsck.f2fs -t $(TARGET_RECOVERY_ROOT_OUT)/sbin/
+
+	$(hide) ln -sf /sbin/sh -t $(TARGET_RECOVERY_ROOT_OUT)/system/bin/
+
+	$(hide) mv $(TARGET_RECOVERY_ROOT_OUT)/res $(PRODUCT_OUT)/extra/
+	$(hide) ln -sf /extra/res -t $(TARGET_RECOVERY_ROOT_OUT)
+	$(hide) mv $(TARGET_RECOVERY_ROOT_OUT)/twres $(PRODUCT_OUT)/extra/
+	$(hide) ln -sf /extra/twres -t $(TARGET_RECOVERY_ROOT_OUT)
+	$(hide) mv $(TARGET_RECOVERY_ROOT_OUT)/supersu $(PRODUCT_OUT)/extra/
+	$(hide) ln -sf /extra/supersu -t $(TARGET_RECOVERY_ROOT_OUT)
+endef
+
+define pre-recovery-clean
+    -rm -rf $(TARGET_RECOVERY_ROOT_OUT)/sbin
+    -rm $(TARGET_RECOVERY_ROOT_OUT)/res
+    -rm $(TARGET_RECOVERY_ROOT_OUT)/twres
+    -rm $(TARGET_RECOVERY_ROOT_OUT)/supersu
+endef
+
+RECOVERY_CLEAN_EXTRA := $(TARGET_RECOVERY_OUT)/clean_extra.tmp
+$(RECOVERY_CLEAN_EXTRA): 
+	@echo -e ${PRT_IMG}"----- Clean recovery filesystem ------"${CL_RST}
+	$(call pre-recovery-clean)
+
+$(TARGET_RECOVERY_ROOT_TIMESTAMP): $(RECOVERY_CLEAN_EXTRA) \
+		$(INTERNAL_RECOVERY_FILES) \
 		$(INSTALLED_RAMDISK_TARGET) \
 		$(INSTALLED_BOOTIMAGE_TARGET) \
 		$(recovery_binary) \
 		$(recovery_initrc) $(recovery_sepolicy) $(recovery_kernel) \
+		$(TARGET_RECOVERY_OUT)/clean_extra.tmp \
 		$(INSTALLED_2NDBOOTLOADER_TARGET) \
 		$(recovery_build_prop) $(recovery_resource_deps) $(recovery_root_deps) \
 		$(recovery_fstab) \
@@ -936,42 +991,8 @@ $(TARGET_RECOVERY_ROOT_TIMESTAMP): $(INTERNAL_RECOVERY_FILES) \
 	$(SED_INPLACE) 's/ro.build.date.utc=.*/ro.build.date.utc=0/g' $(TARGET_RECOVERY_ROOT_OUT)/default.prop
 	$(SED_INPLACE) 's/ro.adb.secure=1/ro.adb.secure=0/g' $(TARGET_RECOVERY_ROOT_OUT)/default.prop
 
-	$(hide) rm -rf $(PRODUCT_OUT)/extra
-	$(hide) mkdir -p $(PRODUCT_OUT)/extra/sbin
-	$(hide) mv $(TARGET_RECOVERY_ROOT_OUT)/sbin/adbd $(PRODUCT_OUT)/extra/sbin/adbd
-	$(hide) mv $(TARGET_RECOVERY_ROOT_OUT)/sbin/dosfsck $(PRODUCT_OUT)/extra/sbin/dosfsck
-	$(hide) mv $(TARGET_RECOVERY_ROOT_OUT)/sbin/e2fsck $(PRODUCT_OUT)/extra/sbin/e2fsck
-	$(hide) mv $(TARGET_RECOVERY_ROOT_OUT)/sbin/healthd $(PRODUCT_OUT)/extra/sbin/healthd
-	$(hide) mv $(TARGET_RECOVERY_ROOT_OUT)/sbin/mkdosfs $(PRODUCT_OUT)/extra/sbin/mkdosfs
-	$(hide) mv $(TARGET_RECOVERY_ROOT_OUT)/sbin/mke2fs $(PRODUCT_OUT)/extra/sbin/mke2fs
-	$(hide) mv $(TARGET_RECOVERY_ROOT_OUT)/sbin/pigz $(PRODUCT_OUT)/extra/sbin/pigz
-	$(hide) mv $(TARGET_RECOVERY_ROOT_OUT)/sbin/tune2fs $(PRODUCT_OUT)/extra/sbin/tune2fs
-	$(hide) mv $(TARGET_RECOVERY_ROOT_OUT)/sbin/recovery $(PRODUCT_OUT)/extra/sbin/recovery
-	$(hide) mv $(TARGET_RECOVERY_ROOT_OUT)/sbin/mkfs.f2fs $(PRODUCT_OUT)/extra/sbin/mkfs.f2fs
-	$(hide) mv $(TARGET_RECOVERY_ROOT_OUT)/sbin/busybox $(PRODUCT_OUT)/extra/sbin/busybox
-	$(hide) mv $(TARGET_RECOVERY_ROOT_OUT)/sbin/linker $(PRODUCT_OUT)/extra/sbin/linker
-	$(hide) mv $(TARGET_RECOVERY_ROOT_OUT)/sbin/fsck.f2fs $(PRODUCT_OUT)/extra/sbin/fsck.f2fs
-
-	$(hide) ln -sf /extra/sbin/adbd -t $(TARGET_RECOVERY_ROOT_OUT)/sbin/
-	$(hide) ln -sf /extra/sbin/dosfsck -t $(TARGET_RECOVERY_ROOT_OUT)/sbin/
-	$(hide) ln -sf /extra/sbin/e2fsck -t $(TARGET_RECOVERY_ROOT_OUT)/sbin/
-	$(hide) ln -sf /extra/sbin/healthd -t $(TARGET_RECOVERY_ROOT_OUT)/sbin/
-	$(hide) ln -sf /extra/sbin/mkdosfs -t $(TARGET_RECOVERY_ROOT_OUT)/sbin/
-	$(hide) ln -sf /extra/sbin/mke2fs -t $(TARGET_RECOVERY_ROOT_OUT)/sbin/
-	$(hide) ln -sf /extra/sbin/pigz -t $(TARGET_RECOVERY_ROOT_OUT)/sbin/
-	$(hide) ln -sf /extra/sbin/tune2fs -t $(TARGET_RECOVERY_ROOT_OUT)/sbin/
-	$(hide) ln -sf /extra/sbin/recovery -t $(TARGET_RECOVERY_ROOT_OUT)/sbin/
-	$(hide) ln -sf /extra/sbin/mkfs.f2fs -t $(TARGET_RECOVERY_ROOT_OUT)/sbin/
-	$(hide) ln -sf /extra/sbin/busybox -t $(TARGET_RECOVERY_ROOT_OUT)/sbin/
-	$(hide) ln -sf /extra/sbin/linker -t $(TARGET_RECOVERY_ROOT_OUT)/sbin/
-	$(hide) ln -sf /extra/sbin/fsck.f2fs -t $(TARGET_RECOVERY_ROOT_OUT)/sbin/
-
-	$(hide) mv $(TARGET_RECOVERY_ROOT_OUT)/res $(PRODUCT_OUT)/extra/
-	$(hide) ln -sf /extra/res -t $(TARGET_RECOVERY_ROOT_OUT)
-	$(hide) mv $(TARGET_RECOVERY_ROOT_OUT)/twres $(PRODUCT_OUT)/extra/
-	$(hide) ln -sf /extra/twres -t $(TARGET_RECOVERY_ROOT_OUT)
-	$(hide) mv $(TARGET_RECOVERY_ROOT_OUT)/supersu $(PRODUCT_OUT)/extra/
-	$(hide) ln -sf /extra/supersu -t $(TARGET_RECOVERY_ROOT_OUT)
+	$(hide) $(call split-recovery-fs)
+	$(hide) -rm $(TARGET_RECOVERY_OUT)/clean_extra.tmp
 
 	@echo -e ${PRT_IMG}"----- Made recovery filesystem -------- $(TARGET_RECOVERY_ROOT_OUT)"${CL_RST}
 	@touch $(TARGET_RECOVERY_ROOT_TIMESTAMP)
