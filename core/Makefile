@@ -915,6 +915,11 @@ define split-recovery-fs
 	$(hide) mv $(TARGET_RECOVERY_ROOT_OUT)/sbin/busybox $(PRODUCT_OUT)/extra/sbin/busybox
 	$(hide) mv $(TARGET_RECOVERY_ROOT_OUT)/sbin/linker $(PRODUCT_OUT)/extra/sbin/linker
 	$(hide) mv $(TARGET_RECOVERY_ROOT_OUT)/sbin/fsck.f2fs $(PRODUCT_OUT)/extra/sbin/fsck.f2fs
+	$(hide) mv $(TARGET_RECOVERY_ROOT_OUT)/sbin/gpg $(PRODUCT_OUT)/extra/sbin/gpg
+	$(hide) mv $(TARGET_RECOVERY_ROOT_OUT)/sbin/zip $(PRODUCT_OUT)/extra/sbin/zip
+	$(hide) mv $(TARGET_RECOVERY_ROOT_OUT)/sbin/lz4 $(PRODUCT_OUT)/extra/sbin/lz4
+	$(hide) mv $(TARGET_RECOVERY_ROOT_OUT)/sbin/ntfs-3g $(PRODUCT_OUT)/extra/sbin/ntfs-3g
+	$(hide) mv $(TARGET_RECOVERY_ROOT_OUT)/sbin/gnutar $(PRODUCT_OUT)/extra/sbin/gnutar
 
 	$(hide) ln -sf /extra/sbin/adbd -t $(TARGET_RECOVERY_ROOT_OUT)/sbin/
 	$(hide) ln -sf /extra/sbin/dosfsck -t $(TARGET_RECOVERY_ROOT_OUT)/sbin/
@@ -929,6 +934,12 @@ define split-recovery-fs
 	$(hide) ln -sf /extra/sbin/busybox -t $(TARGET_RECOVERY_ROOT_OUT)/sbin/
 	$(hide) ln -sf /extra/sbin/linker -t $(TARGET_RECOVERY_ROOT_OUT)/sbin/
 	$(hide) ln -sf /extra/sbin/fsck.f2fs -t $(TARGET_RECOVERY_ROOT_OUT)/sbin/
+	$(hide) ln -sf /extra/sbin/gpg -t $(TARGET_RECOVERY_ROOT_OUT)/sbin/
+	$(hide) ln -sf /extra/sbin/zip -t $(TARGET_RECOVERY_ROOT_OUT)/sbin/
+	$(hide) ln -sf /extra/sbin/lz4 -t $(TARGET_RECOVERY_ROOT_OUT)/sbin/
+	$(hide) ln -sf /extra/sbin/ntfs-3g -t $(TARGET_RECOVERY_ROOT_OUT)/sbin/
+	$(hide) ln -sf /extra/sbin/gnutar -t $(TARGET_RECOVERY_ROOT_OUT)/sbin/
+
 
 	$(hide) ln -sf /sbin/sh -t $(TARGET_RECOVERY_ROOT_OUT)/system/bin/
 
