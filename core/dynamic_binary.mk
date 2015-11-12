@@ -95,7 +95,7 @@ strip_output := $(LOCAL_BUILT_MODULE)
 
 my_strip_module := $(LOCAL_STRIP_MODULE)
 ifeq ($(my_strip_module),)
-  my_strip_module := $($(LOCAL_2ND_ARCH_VAR_PREFIX)TARGET_STRIP_MODULE)
+  my_strip_module := true
 endif
 
 $(strip_output): PRIVATE_STRIP := $($(LOCAL_2ND_ARCH_VAR_PREFIX)TARGET_STRIP)
@@ -143,4 +143,5 @@ endif # my_strip_module
 
 $(cleantarget): PRIVATE_CLEAN_FILES += \
     $(linked_module) \
-    $(symbolic_output)
+    $(symbolic_output) \
+    $(strip_output)
