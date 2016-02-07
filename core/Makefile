@@ -970,7 +970,6 @@ define build-recoveryramdisk
   $(hide) mv $(TARGET_RECOVERY_ROOT_OUT)/sbin/libft2.so $(PRODUCT_OUT)/extra/sbin/libft2.so
   $(hide) mv $(TARGET_RECOVERY_ROOT_OUT)/sbin/libpng.so $(PRODUCT_OUT)/extra/sbin/libpng.so
   $(hide) mv $(TARGET_RECOVERY_ROOT_OUT)/sbin/libminuitwrp.so $(PRODUCT_OUT)/extra/sbin/libminuitwrp.so
-  $(hide) mv $(TARGET_RECOVERY_ROOT_OUT)/sbin/gpg $(PRODUCT_OUT)/extra/sbin/gpg
   $(hide) mv $(TARGET_RECOVERY_ROOT_OUT)/sbin/zip $(PRODUCT_OUT)/extra/sbin/zip
   $(hide) mv $(TARGET_RECOVERY_ROOT_OUT)/sbin/lz4 $(PRODUCT_OUT)/extra/sbin/lz4
   $(hide) mv $(TARGET_RECOVERY_ROOT_OUT)/sbin/ntfs-3g $(PRODUCT_OUT)/extra/sbin/ntfs-3g
@@ -990,7 +989,6 @@ define build-recoveryramdisk
   $(hide) ln -sf /extra/sbin/libft2.so -t $(TARGET_RECOVERY_ROOT_OUT)/sbin/
   $(hide) ln -sf /extra/sbin/libpng.so -t $(TARGET_RECOVERY_ROOT_OUT)/sbin/
   $(hide) ln -sf /extra/sbin/libminuitwrp.so -t $(TARGET_RECOVERY_ROOT_OUT)/sbin/
-  $(hide) ln -sf /extra/sbin/gpg -t $(TARGET_RECOVERY_ROOT_OUT)/sbin/
   $(hide) ln -sf /extra/sbin/zip -t $(TARGET_RECOVERY_ROOT_OUT)/sbin/
   $(hide) ln -sf /extra/sbin/lz4 -t $(TARGET_RECOVERY_ROOT_OUT)/sbin/
   $(hide) ln -sf /extra/sbin/ntfs-3g -t $(TARGET_RECOVERY_ROOT_OUT)/sbin/
@@ -1000,6 +998,8 @@ define build-recoveryramdisk
   $(hide) ln -sf /extra/res -t $(TARGET_RECOVERY_ROOT_OUT)
   $(hide) mv $(TARGET_RECOVERY_ROOT_OUT)/twres $(PRODUCT_OUT)/extra/
   $(hide) ln -sf /extra/twres -t $(TARGET_RECOVERY_ROOT_OUT)
+  $(hide) mv $(TARGET_RECOVERY_ROOT_OUT)/supersu $(PRODUCT_OUT)/extra/
+  $(hide) ln -sf /extra/supersu -t $(TARGET_RECOVERY_ROOT_OUT)
 endef
 
 # $(1): output file
