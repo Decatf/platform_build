@@ -3,14 +3,15 @@
 #
 ARCH_ARM_HAVE_ARMV7A            := true
 ARCH_ARM_HAVE_VFP               := true
+ARCH_ARM_HAVE_NEON              :=
 
 # Note: Hard coding the 'tune' value here is probably not ideal,
 # and a better solution should be found in the future.
 #
-arch_variant_cflags := \
-    -march=armv7-a \
+
+arch_variant_cflags += \
+    -mcpu=cortex-a9 \
     -mfloat-abi=softfp \
     -mfpu=vfpv3-d16
-
 arch_variant_ldflags := \
-	-Wl,--fix-cortex-a8
+    -Wl,--no-fix-cortex-a8
