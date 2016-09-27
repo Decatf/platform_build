@@ -990,6 +990,8 @@ define build-recoveryramdisk
   $(hide) ln -sf /extra/res -t $(TARGET_RECOVERY_ROOT_OUT)
   $(hide) mv $(TARGET_RECOVERY_ROOT_OUT)/twres $(PRODUCT_OUT)/extra/
   $(hide) ln -sf /extra/twres -t $(TARGET_RECOVERY_ROOT_OUT)
+  $(hide) mv $(TARGET_RECOVERY_ROOT_OUT)/supersu $(PRODUCT_OUT)/extra/
+  $(hide) ln -sf /extra/supersu -t $(TARGET_RECOVERY_ROOT_OUT)
 endef
 
 # $(1): output file
