@@ -715,6 +715,9 @@ else if get_stage("%(bcb_dev)s") == "3/3" then
     symlinks = CopyPartitionFiles(system_items, input_zip, output_zip)
     script.MakeSymlinks(symlinks)
 
+  # SuperSU configuration
+  script.AppendExtra('run_program("/sbin/mv", "/system/supersu_config", "/system/.supersu");')
+
   boot_img = common.GetBootableImage(
       "boot.img", "boot.img", OPTIONS.input_tmp, "BOOT")
 
