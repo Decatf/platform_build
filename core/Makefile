@@ -2602,7 +2602,6 @@ ifeq ($(TARGET_BUILD_TYPE),debug)
   name := $(name)_debug
 endif
 name := aosp-8.0-$(name)-$(shell date +"%Y%m%d")
-backuptool := true
 
 INTERNAL_OTA_PACKAGE_TARGET := $(PRODUCT_OUT)/$(name).zip
 
@@ -2613,6 +2612,8 @@ $(INTERNAL_OTA_PACKAGE_TARGET): $(BRILLO_UPDATE_PAYLOAD)
 else
 $(INTERNAL_OTA_PACKAGE_TARGET): $(BRO)
 endif
+
+$(INTERNAL_OTA_PACKAGE_TARGET): backuptool := true
 
 $(INTERNAL_OTA_PACKAGE_TARGET): $(BUILT_TARGET_FILES_PACKAGE) \
 		build/tools/releasetools/ota_from_target_files
