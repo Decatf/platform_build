@@ -674,10 +674,7 @@ else if get_stage("%(bcb_dev)s") == "3/3" then
   device_specific.FullOTA_InstallBegin()
 
   if OPTIONS.backuptool:
-    script.AppendExtra('run_program("/sbin/umount", "/system");')
-    script.AppendExtra('run_program("/sbin/mount", "/system");')
     script.RunBackup("backup")
-    script.AppendExtra('run_program("/sbin/umount", "/system");')
 
   system_progress = 0.75
 
